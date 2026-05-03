@@ -19,6 +19,11 @@ dependencies = [
     "psutil",
 ]
 
+[project.urls]
+Repository = "https://github.com/mtpontes/docker-cleanup-pro"
+Documentation = "https://mtpontes.github.io/docker-cleanup-pro/"
+"Bug Tracker" = "https://github.com/mtpontes/docker-cleanup-pro/issues"
+
 [project.scripts]
 docker-cleanup = "src.main:app"
 
@@ -30,6 +35,7 @@ dependencies = [
     "pytest",
     "pytest-cov",
     "PyYAML",
+    "build",
 ]
 
 [tool.hatch.envs.default.scripts]
@@ -38,6 +44,13 @@ docs-serve = [
 ]
 docs-build = [
   "npm run build --prefix docs-site"
+]
+build-local = [
+  "python -m build"
+]
+clean = [
+  "rm -rf dist/",
+  "rm -rf *.egg-info"
 ]
 run = "python src/main.py {args}"
 
