@@ -29,11 +29,15 @@ packages = ["src"]
 dependencies = [
     "pytest",
     "pytest-cov",
+    "PyYAML",
 ]
 
 [tool.hatch.envs.default.scripts]
 docs-serve = [
   "npm run dev --prefix docs-site"
+]
+docs-build = [
+  "npm run build --prefix docs-site"
 ]
 run = "python src/main.py {args}"
 

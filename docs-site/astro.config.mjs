@@ -4,7 +4,7 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://mtpontes.github.io',
+	site: 'https://mtpontes.github.io/docker-cleanup-pro/',
 	base: '/docker-cleanup-pro',
 	devToolbar: {
 		enabled: false,

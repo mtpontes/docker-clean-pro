@@ -4,22 +4,28 @@ from src.services.docker_service import DockerService
 from src.services.system_service import SystemService
 
 @patch('docker.from_env')
-def test_docker_service_counts(mock_from_env):
+def test_docker_service_usage(mock_from_env):
     mock_client = MagicMock()
     mock_from_env.return_value = mock_client
     
-    mock_client.containers.list.return_value = [1, 2, 3]
-    mock_client.images.list.return_value = [1, 2]
-    mock_client.volumes.list.return_value = [1]
-    mock_client.networks.list.return_value = [1, 2, 3, 4]
+    # Mock return value for client.df()
+    mock_client.df.return_value = {
+        'Containers': [{'Size': 100}, {'Size': 200}],
+        'Images': [{'Size': 1000}, {'Size': 2000}],
+        'Volumes': [{'UsageData': {'Size': 500}}],
+        'BuildCache': [{'Size': 50}]
+    }
     
     service = DockerService()
-    counts = service.get_resource_counts()
+    usage = service.get_detailed_usage()
     
-    assert counts['containers'] == 3
-    assert counts['images'] == 2
-    assert counts['volumes'] == 1
-    assert counts['networks'] == 4
+    assert usage['containers']['count'] == 2
+    assert usage['containers']['size'] == 300
+    assert usage['images']['count'] == 2
+    assert usage['images']['size'] == 3000
+    assert usage['volumes']['count'] == 1
+    assert usage['volumes']['size'] == 500
+    assert usage['build_cache']['size'] == 50
 
 @patch('psutil.disk_usage')
 def test_system_service_usage(mock_disk_usage):
