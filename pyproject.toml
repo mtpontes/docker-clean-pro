@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "docker-cleanup-pro"
+version = "1.0.0"
+description = "Professional Docker cleanup tool migrated from PowerShell to Python"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [
+    { name = "mtpontes" }
+]
+dependencies = [
+    "typer",
+    "rich",
+    "docker",
+    "psutil",
+]
+
+[project.scripts]
+docker-cleanup = "src.main:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.hatch.envs.default]
+dependencies = [
+    "pytest",
+    "pytest-cov",
+]
+
+[tool.hatch.envs.default.scripts]
+docs-serve = [
+  "npm run dev --prefix docs-site"
+]
+run = "python src/main.py {args}"
+
+[tool.hatch.envs.test.scripts]
+run = "pytest {args:tests}"
+cov = "pytest --cov=src --cov-report=term-missing {args:tests}"
