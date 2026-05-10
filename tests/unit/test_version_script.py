@@ -50,7 +50,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "docker-cleanup-pro"
+name = "docker-clean-pro"
 version = "1.0.0"
 description = "test"
 """
@@ -66,7 +66,7 @@ description = "test"
     
     new_content = pyproject.read_text()
     assert 'version = "2.0.0"' in new_content
-    assert 'name = "docker-cleanup-pro"' in new_content
+    assert 'name = "docker-clean-pro"' in new_content
     assert 'build-backend = "hatchling.build"' in new_content
 
 def test_version_not_found(tmp_path):
@@ -83,4 +83,20 @@ def test_version_not_found(tmp_path):
     )
     
     assert result.returncode != 0
-    assert "não encontrada" in result.stderr
+    assert "Nenhuma chave de versão encontrada" in result.stderr
+
+def test_version_update_main_py_banner(tmp_path):
+    """Testa se o script consegue atualizar a versão no banner do main.py."""
+    main_py = tmp_path / "main.py"
+    main_py.write_text('console.print("           DOCKER CLEAN PRO v1.1 (PY)", style="bold cyan")')
+    
+    script_path = Path(__file__).parent.parent.parent / "scripts" / "update_version.py"
+    
+    # Tentamos atualizar a versão para 2.0.0
+    subprocess.run(
+        [sys.executable, str(script_path), "2.0.0", "--file", str(main_py)],
+        check=True
+    )
+    
+    content = main_py.read_text()
+    assert 'DOCKER CLEAN PRO v2.0.0 (PY)' in content

@@ -49,13 +49,15 @@ def test_pypi_workflow_syntax():
     
     assert data["name"] == "Publish to PyPI"
     
-    permissions = data.get("jobs", {}).get("build-n-publish", {}).get("permissions", {})
+    permissions = data.get("jobs", {}).get("pypi-publish", {}).get("permissions", {})
     assert permissions.get("id-token") == "write"
     
-    steps = data["jobs"]["build-n-publish"]["steps"]
+    env = data.get("jobs", {}).get("pypi-publish", {}).get("environment", {})
+    assert env.get("name") == "pypi"
+    
+    steps = data["jobs"]["pypi-publish"]["steps"]
     step_names = [step.get("name") for step in steps]
     
-    assert "Extract version" in step_names
-    assert "Update version in pyproject.toml" in step_names
-    assert "Build binary wheel and source tarball" in step_names
+    assert "Extract and Update Version" in step_names
+    assert "Build sdist and wheel" in step_names
     assert "Publish package distributions to PyPI" in step_names

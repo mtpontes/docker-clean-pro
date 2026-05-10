@@ -18,7 +18,7 @@ console = Console()
 
 def show_banner():
     console.print("==============================================", style="cyan")
-    console.print("           DOCKER CLEANUP PRO v1.1 (PY)", style="bold cyan")
+    console.print("           DOCKER CLEAN PRO v1.1 (PY)", style="bold cyan")
     console.print("==============================================", style="cyan")
 
 def format_size(bytes_size: float) -> str:
