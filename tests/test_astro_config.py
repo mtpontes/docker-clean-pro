@@ -15,9 +15,9 @@ def test_astro_config_content():
         content = f.read()
     
     # Verifica site e base
-    assert "site: 'https://mtpontes.github.io/docker-cleanup-pro/'" in content or 'site: "https://mtpontes.github.io/docker-cleanup-pro/"' in content, "Configuração 'site' incorreta"
-    assert "base: '/docker-cleanup-pro'" in content or "base: \"/docker-cleanup-pro\"" in content, "Configuração 'base' incorreta"
+    assert "site: 'https://mtpontes.github.io/docker-clean-pro/'" in content or 'site: "https://mtpontes.github.io/docker-clean-pro/"' in content, "Configuração 'site' incorreta"
+    assert "base: '/docker-clean-pro'" in content or "base: \"/docker-clean-pro\"" in content, "Configuração 'base' incorreta"
     
     # Verifica se starlight está presente
     assert "starlight(" in content or "starlight {" in content, "Integração Starlight ausente"
-    assert "title: 'Docker Cleanup Pro'" in content or 'title: "Docker Cleanup Pro"' in content, "Título do projeto incorreto no Starlight"
+    assert "title: 'Docker Clean Pro'" in content or 'title: "Docker Clean Pro"' in content, "Título do projeto incorreto no Starlight"

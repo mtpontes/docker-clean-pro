@@ -47,4 +47,14 @@ def test_project_urls():
     assert "Repository" in urls
     assert "Documentation" in urls
     assert "Bug Tracker" in urls
-    assert urls["Repository"] == "https://github.com/mtpontes/docker-cleanup-pro"
+    assert urls["Repository"] == "https://github.com/mtpontes/docker-clean-pro"
+
+def test_project_name_and_command():
+    """Verifica se o nome do projeto e o comando CLI estão corretos."""
+    pyproject_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "pyproject.toml"))
+    
+    with open(pyproject_path, "rb") as f:
+        data = tomllib.load(f)
+    
+    assert data.get("project", {}).get("name") == "docker-clean-pro"
+    assert "docker-clean" in data.get("project", {}).get("scripts", {})

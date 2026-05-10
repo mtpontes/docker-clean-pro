@@ -1,4 +1,4 @@
-# Docker Cleanup Pro (Python)
+# Docker Clean Pro (Python)
 
 Professional Docker cleanup tool migrated from PowerShell.
 
@@ -6,7 +6,7 @@ Professional Docker cleanup tool migrated from PowerShell.
 
 Using Hatch:
 ```bash
-hatch run docker-cleanup --help
+hatch run docker-clean --help
 ```
 
 ## Features

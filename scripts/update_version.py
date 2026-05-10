@@ -15,21 +15,28 @@ def update_version(file_path: Path, new_version: str):
 
     content = file_path.read_text()
     
-    # Regex to find version = "..."
-    # We use a non-greedy match to ensure we only catch the version string
-    version_pattern = r'(version\s*=\s*")([^"]+)(")'
+    # List of (pattern, replacement_template)
+    patterns = [
+        (r'(version\s*=\s*")([^"]+)(")', fr'\g<1>{new_version}\g<3>'),
+        (r'(DOCKER CLEAN PRO v)([0-9.]+)', fr'\g<1>{new_version}')
+    ]
     
-    if not re.search(version_pattern, content):
-        print(f"Erro: Chave 'version' não encontrada em {file_path}", file=sys.stderr)
+    found = False
+    new_content = content
+    for pattern, replacement in patterns:
+        if re.search(pattern, new_content):
+            new_content = re.sub(pattern, replacement, new_content)
+            found = True
+    
+    if not found:
+        print(f"Erro: Nenhuma chave de versão encontrada em {file_path}", file=sys.stderr)
         sys.exit(1)
-
-    new_content = re.sub(version_pattern, fr'\g<1>{new_version}\g<3>', content)
     
     file_path.write_text(new_content)
     print(f"Sucesso: Versão atualizada para {new_version} em {file_path}")
 
 def main():
-    parser = argparse.ArgumentParser(description="Atualiza a versão no pyproject.toml")
+    parser = argparse.ArgumentParser(description="Atualiza a versão no pyproject.toml ou main.py banner")
     parser.add_argument("version", help="Nova versão (ex: 1.1.0 ou v1.1.0)")
     parser.add_argument("--file", default="pyproject.toml", help="Caminho para o arquivo (padrão: pyproject.toml)")
     

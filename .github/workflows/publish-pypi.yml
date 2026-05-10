@@ -14,12 +14,14 @@ on:
         required: true
 
 jobs:
-  build-n-publish:
-    name: Build and publish Python 🐍 distributions 📦 to PyPI
+  pypi-publish:
+    name: Build and publish Python distribution to PyPI
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/docker-clean-pro
     permissions:
-      id-token: write  # Mandatory for Trusted Publishing
-      contents: write  # Required for tagging/commits if needed
+      id-token: write
 
     steps:
     - uses: actions/checkout@v4
@@ -36,36 +38,34 @@ jobs:
         python -m pip install --upgrade pip
         pip install build
 
-    - name: Extract version
-      id: extract_version
+    - name: Extract and Update Version
       run: |
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+        # 1. Check if version was provided manually
+        VERSION_MANUAL="${{ github.event.inputs.version }}"
+        
+        if [ -n "$VERSION_MANUAL" ]; then
+          VERSION="$VERSION_MANUAL"
+          echo "🎯 Using manual version: $VERSION"
         else
-          # Try to extract version from commit message (e.g. "release/1.2.3" or "v1.2.3")
-          MSG=$(git log -1 --pretty=%B)
-          if [[ $MSG =~ release/([v0-9.]+) ]]; then
-            echo "VERSION=${BASH_REMATCH[1]}" >> $GITHUB_ENV
-          elif [[ $MSG =~ v([0-9.]+) ]]; then
-            echo "VERSION=${BASH_REMATCH[1]}" >> $GITHUB_ENV
+          # 2. Extract from commit message if it contains 'release/x.x.x' or 'v.x.x.x'
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          VERSION=$(echo "$COMMIT_MSG" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+" | head -n 1)
+          
+          if [ -z "$VERSION" ]; then
+            echo "⚠️ No version pattern found in commit message. Skipping auto-version update."
           else
-            echo "No version pattern found in commit message. Skipping publish."
-            echo "SKIP=true" >> $GITHUB_ENV
+            echo "🚀 Extracted version from commit: $VERSION"
           fi
         fi
+        
+        if [ -n "$VERSION" ]; then
+          python scripts/update_version.py "$VERSION"
+        fi
 
-    - name: Update version in pyproject.toml
-      if: env.SKIP != 'true'
-      run: |
-        python scripts/update_version.py ${{ env.VERSION }}
-
-    - name: Build binary wheel and source tarball
-      if: env.SKIP != 'true'
+    - name: Build sdist and wheel
       run: python -m build
 
     - name: Publish package distributions to PyPI
-      if: env.SKIP != 'true'
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        packages-dir: dist/
-        # Trusted publishing doesn't need API tokens
+        skip-existing: true

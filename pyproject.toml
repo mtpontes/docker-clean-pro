@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "docker-cleanup-pro"
+name = "docker-clean-pro"
 version = "1.0.0"
 description = "Professional Docker cleanup tool migrated from PowerShell to Python"
 readme = "README.md"
@@ -20,12 +20,12 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/mtpontes/docker-cleanup-pro"
-Documentation = "https://mtpontes.github.io/docker-cleanup-pro/"
-"Bug Tracker" = "https://github.com/mtpontes/docker-cleanup-pro/issues"
+Repository = "https://github.com/mtpontes/docker-clean-pro"
+Documentation = "https://mtpontes.github.io/docker-clean-pro/"
+"Bug Tracker" = "https://github.com/mtpontes/docker-clean-pro/issues"
 
 [project.scripts]
-docker-cleanup = "src.main:app"
+docker-clean = "src.main:app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
