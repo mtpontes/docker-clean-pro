@@ -1,5 +1,0 @@
-﻿---
-title: Quickstart
----
-
-Get started.
