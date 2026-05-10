@@ -21,7 +21,6 @@ dependencies = [
 
 [project.urls]
 Repository = "https://github.com/mtpontes/docker-clean-pro"
-Documentation = "https://mtpontes.github.io/docker-clean-pro/"
 "Bug Tracker" = "https://github.com/mtpontes/docker-clean-pro/issues"
 
 [project.scripts]
@@ -39,12 +38,6 @@ dependencies = [
 ]
 
 [tool.hatch.envs.default.scripts]
-docs-serve = [
-  "npm run dev --prefix docs-site"
-]
-docs-build = [
-  "npm run build --prefix docs-site"
-]
 build-local = [
   "python -m build"
 ]
